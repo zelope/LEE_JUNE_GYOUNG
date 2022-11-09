@@ -1,0 +1,86 @@
+### v_table *making*
+v_table = 'variety'
+v_col = 'id INT primary key, variety varchar'
+db_con.create_table(v_table, v_col)
+vdata = ['setosa', 'versicolor', 'virginica']
+for i in vdata:
+    db_con.insertDB(v_table, f"{vdata.index(i)}, '{i}'")
+
+### making complete
+
+
+
+import csv
+
+f = open('data.csv', 'r', encoding='utf-8')
+rdr = csv.reader(f)
+for line in rdr:
+    print(line)
+f.close()
+
+
+
+
+i_col = ''
+for i in range(0,len(data.dtypes)):
+    _temp = f"{data.columns[i]} {data.dtypes[i]}, "
+
+    if (i == len(data.dtypes)-1):
+        _temp = f"{data.columns[i]} {data.dtypes[i]} "
+
+    i_col = i_col + _temp
+
+db_con.create_table(i_table,i_col)
+
+### *input* iris.csv
+
+data = pd.read_csv('iris.csv')
+i_table = 'iris'
+i_col = 'sepal_length float ,sepal_width float, petal_length float ,petal_width float,name int'
+db_con.create_table(i_table, i_col)
+db_con.inputcsv(i_table, 'C:/Users/ljg98/Downloads/iris.csv')
+
+
+### *input* iris.csv
+
+
+i_table = 'iris'
+i_col = 'id serial primary key, sepal_length float ,sepal_width float, petal_length float ,petal_width float,name int'
+db_con.create_table(i_table,i_col)
+f = open('iris.csv', 'r', encoding='utf-8')
+rdr = csv.reader(f)
+
+for line in rdr:
+    db_con.insertDB(i_table,f"default, {line[0]}, {line[1]}, {line[2]}, {line[3]}, {line[4]}" )
+f.close()
+
+import psycopg2
+
+conn = psycopg2.connect(database="testable",
+						user='postgres', password='1234',
+						host='127.0.0.1', port='5432'
+)
+
+conn.autocommit = True
+cursor = conn.cursor()
+
+
+sql = '''CREATE TABLE DETAILS(id int primary key, sepal_length float ,sepal_width float, petal_length float ,petal_width float,name int);'''
+
+
+cursor.execute(sql)
+
+sql2 = '''COPY details(id , sepal_length ,sepal_width, petal_length  ,petal_width , name)
+FROM 'C:/Program Files/PostgreSQL/iris.csv'
+DELIMITER ','
+CSV HEADER;'''
+
+cursor.execute(sql2)
+
+sql3 = '''select * from details;'''
+cursor.execute(sql3)
+for i in cursor.fetchall():
+	print(i)
+
+conn.commit()
+conn.close()
